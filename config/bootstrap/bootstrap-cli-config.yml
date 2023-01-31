@@ -7,10 +7,9 @@ bootstrap:
     # v2 adding as features, available as cli paramaters only atm (v1)
     # allowed values are parsed case-insensitive: [true|yes|YES|..] or [false|no|NO|..]
     # not as strings in quotes "yes" or 'yes'
-
     # default and recommended is: false
-    #   in CDF 2022 support for this special-groups is not necessary anymore
-    #   check 'bootstrap-cli deploy --help' for more info
+    # in CDF 2022 support for this special-groups is not necessary anymore
+    # check 'bootstrap-cli deploy --help' for more info
         with-special-groups: false
 
     # default and recommended is: true
@@ -52,44 +51,64 @@ bootstrap:
       # atm (v1) hardcoded is one additional rawdb
             - state
 
-    # Mapping between IDP (Azure Active Directory) groups and CDF groups.
+  # Mapping between IDP (Azure Active Directory) groups and CDF groups.
     idp-cdf-mappings:
     # Support multiple CDF Projects, like dev/test/prod in one config.
-        - cdf-project: <CDF project name> # i.e. bootcamp-01-test
+        - cdf-project: cdf-bootcamp-41-test # i.e. bootcamp-01-test
           mappings:
               - cdf-group: cdf:root
-                idp-source-id: <AAD Group Object id>
-                idp-source-name: <AAD Group name>
+                idp-source-id: 869223a4-598f-47e5-b8d2-bcf37a56ef1e
+                idp-source-name: bootcamp-41-admin
               - cdf-group: cdf:all:owner
-                idp-source-id: <AAD Group Object Id> # for the AAD Group to be matched to cdf-group
-                idp-source-name: <AAD Group name> # i.e. bootcamp-01-test-all-owner
+                idp-source-id: 43c6d431-5b49-4ae3-be7f-500714a76a5f # for the AAD Group to be matched to cdf-group
+                idp-source-name: bootcamp-41-test-all-owner
               - cdf-group: cdf:all:read
-                idp-source-id: <AAD Group Object Id> # for the AAD Group to be matched to cdf-group
-                idp-source-name: <AAD Group name> # i.e. bootcamp-01-test-all-read
-
+                idp-source-id: 81c2adae-ebb1-44d4-98c5-f5ace5ea3413 # for the AAD Group to be matched to cdf-group
+                idp-source-name: bootcamp-41-test-all-read # i.e. bootcamp-01-test-all-read
+        - cdf-project: cdf-bootcamp-41-prod # i.e. bootcamp-01-test
+          mappings:
+              - cdf-group: cdf:root
+                idp-source-id: 8138a5b6-d1b8-4f00-8162-6ef7a531dcc4
+                idp-source-name: bootcamp-41-prod-admin
+              - cdf-group: cdf:all:owner
+                idp-source-id: 12138203-d117-42a6-9d0d-015f54597c13 # for the AAD Group to be matched to cdf-group
+                idp-source-name: bootcamp-41-prod-all-owner
+              - cdf-group: cdf:all:read
+                idp-source-id: 042c7963-d4cf-4b2b-a6c9-9fb0f854e14e # for the AAD Group to be matched to cdf-group
+                idp-source-name: bootcamp-41-prod-all-read # i.e. bootcamp-01-test-all-read
 
     namespaces:
-        # Typical config will have a namespace for data sources ("src") and a namespace for use cases ("uc")
-        - ns-name: <Namespace name>
-          description: Data sources for the Ice Cream Factory # HINT
-
-          # Node names will normally follow src:001:srcname or uc:001:usecasename naming convention
+        - ns-name: src
+          description: Sources used for data extraction
+      # Description names will normally follow src:001:srcname or uc:001:usecasename naming convention
           ns-nodes:
-              - node-name: <Node name>
-                description: Data from SAP # HINT
-        # HINT: Add another namespace below
+              - node-name: src:001:sap
+                description: Source 01 data from SAP
+              - node-name: src:002:opcua
+                description: Source 02 data from opcua
+    # Typical config will have separate namespace by data source ("src") and use cases ("uc")
+        - ns-name: uc
+          description: Use cases representing the data/products
 
+      # Description names will normally follow src:001:srcname or uc:001:usecasename naming convention
+          ns-nodes:
+              - node-name: uc:001:oee
+                description: Use case 001 Over all Equipment effectiveness
+                shared-access:
+                    read:
+                        - node-name: src:001:sap
+                        - node-name: src:002:opcua
 
 # de-facto standards for CDF CogniteClient and logger configuration.
 # Following the same parameter structure as the 'Cognite Python Extractor-Utilities'
 # and 'Cognite DB Extractor' configuration.
 cognite: # kwargs to pass to the CogniteClient, Environment variable format: ${ENVIRONMENT_VARIABLE_NAME}
-    # host: https://${BOOTSTRAP_CDF_CLUSTER}.cognitedata.com/
+  # host: https://${BOOTSTRAP_CDF_CLUSTER}.cognitedata.com/
     host: ${BOOTSTRAP_CDF_HOST}
     project: ${BOOTSTRAP_CDF_PROJECT}
-    #
-    # AAD IdP login credentials:
-    #
+  #
+  # AAD IdP login credentials:
+  #
     idp-authentication:
         client-id: ${BOOTSTRAP_IDP_CLIENT_ID}
         secret: ${BOOTSTRAP_IDP_CLIENT_SECRET}
