@@ -4,8 +4,8 @@ name: deploy-bootstrap-cli
 on:
     push:
         branches:
-            #- main
-            - none
+            - main
+      #- none
 
 jobs:
     bootstrap_cdf:
@@ -16,19 +16,19 @@ jobs:
                 environment: [test, prod]
                 include:
                     - environment: test
-                      # CDF cluster, like bluefield, greenfield or westeurope-1
-                      CDF_CLUSTER: [CDF cluster]
-                      # CDF Project name
-                      CDF_PROJECT: [CDF project]
-                      # Azure AD tenant id
-                      IDP_TENANT: [AAD tenant id]
+            # CDF cluster, like bluefield, greenfield or westeurope-1
+                      CDF_CLUSTER: westeurope-1
+            # CDF Project name
+                      CDF_PROJECT: cdf-bootcamp-41-test
+            # Azure AD tenant id
+                      IDP_TENANT: 16e3985b-ebe8-4e24-9da4-933e21a9fc81
                     - environment: prod
-                      # CDF cluster, like bluefield, greenfield or westeurope-1
-                      CDF_CLUSTER: [CDF cluster]
-                      # CDF Project name
-                      CDF_PROJECT: [CDF project]
-                      # Azure AD tenant id
-                      IDP_TENANT: [AAD tenant id]
+            # CDF cluster, like bluefield, greenfield or westeurope-1
+                      CDF_CLUSTER: westeurope-1
+            # CDF Project name
+                      CDF_PROJECT: cdf-bootcamp-41-prod
+            # Azure AD tenant id
+                      IDP_TENANT: 16e3985b-ebe8-4e24-9da4-933e21a9fc81
 
         environment: ${{ matrix.environment}}
         env:
@@ -46,7 +46,7 @@ jobs:
                   BOOTSTRAP_IDP_SCOPES: ${{ env.CDF_HOST }}.default
 
               with:
-                  # Path to Bootstrap CLI configuration file
+          # Path to Bootstrap CLI configuration file
                   config_file: ./config/bootstrap/bootstrap-cli-config.yml
-            # "yes"|"no" deploy with special groups and aad_mappings
-            #with_special_groups: "yes"
+      # "yes"|"no" deploy with special groups and aad_mappings
+      #with_special_groups: "yes"
